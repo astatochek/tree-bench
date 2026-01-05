@@ -1,0 +1,5 @@
+[workspace]
+infer-tasks-from-scripts = true
+
+[install]
+workspaces = true

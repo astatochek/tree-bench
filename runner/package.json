@@ -1,0 +1,9 @@
+{
+  "name": "runner",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun run src/index.ts"
+  }
+}

@@ -1,8 +1,14 @@
 {
   "name": "tree-bench",
-  "module": "index.ts",
+  "module": "runner/src/index.ts",
   "type": "module",
-  "private": true,
+  "workspaces": [
+    "runner",
+    "frameworks/*"
+  ],
+  "scripts": {
+    "test": "cd runner && bun run test"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
