@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "cd runner && bun run test",
-    "angular:start": "cd frameworks/angular-signals && bun run start"
+    "serve:angular-signals": "cd frameworks/angular-signals && bun run serve.ts --port 8080"
   },
   "devDependencies": {
     "@types/bun": "latest"
