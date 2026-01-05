@@ -1,6 +1,5 @@
-import angularSignalsApp from './dist/angular-signals/browser/index.html'
-
 import { parseArgs } from "util";
+import {$} from "bun"
 
 const { values } = parseArgs({
   args: Bun.argv,
@@ -17,11 +16,14 @@ if (!values.port || isNaN(Number(values.port))) {
   throw new Error(`Unexpected value for "port": ${values.port}`)
 }
 
+await $`bun run build`;
+
+const html = await import('./dist/angular-signals/browser/index.html');
 
 const server = Bun.serve({
   port: values.port,
   routes: {
-    "/": angularSignalsApp
+    "/": html.default
   },
 })
 
