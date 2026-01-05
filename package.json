@@ -3,7 +3,8 @@
   "module": "runner/src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "cd runner && bun run test"
+    "test": "cd runner && bun run test",
+    "angular:start": "cd frameworks/angular-signals && bun run start"
   },
   "devDependencies": {
     "@types/bun": "latest"
