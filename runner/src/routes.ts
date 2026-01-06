@@ -1,6 +1,6 @@
-import { Page, Route, Request } from "playwright";
+import type { Page, Route, Request } from "playwright";
 
-export async function setupRoutes(page: Page): void {
+export async function setupRoutes(page: Page) {
   await page.route(
     (url) => url.pathname.includes("api/tree"),
     async (route: Route, request: Request) => {
