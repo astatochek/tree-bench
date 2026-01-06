@@ -157,7 +157,14 @@ function updateTreeNodeAttr(node: TreeNode, pos: number, value: string): TreeNod
 }
 
 function toggleNodeExpand(node: TreeNode): TreeNode {
-  return new TreeNode(node.title, node.children, node.attributes, !node.isExpanded, node.isSelfEdited, node.isEditedRecursive);
+  return new TreeNode(
+    node.title,
+    node.children,
+    node.attributes,
+    !node.isExpanded,
+    node.isSelfEdited,
+    node.isEditedRecursive,
+  );
 }
 
 function updateTreeNodeChild(

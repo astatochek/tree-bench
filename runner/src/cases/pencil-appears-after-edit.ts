@@ -2,6 +2,7 @@ import { type Page } from "playwright";
 import { type Context, sut } from "../sut.ts";
 import { WSL_LOCALHOST_ALIAS } from "../wsl.ts";
 import { run } from "../run.ts";
+import { report } from "../report.ts";
 
 async function pencilAppearsAfterEdit(page: Page, ctx: Context) {
   await page.goto(`http://${WSL_LOCALHOST_ALIAS}:${ctx.port}`);
@@ -29,4 +30,4 @@ async function pencilAppearsAfterEdit(page: Page, ctx: Context) {
 
 await run(sut, pencilAppearsAfterEdit);
 
-console.log(sut);
+sut.map(report);
