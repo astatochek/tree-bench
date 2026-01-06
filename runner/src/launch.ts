@@ -1,6 +1,7 @@
 import { chromium } from "playwright";
-import { setupRoutes } from "./routes.ts";
 import { parseArgs } from "util";
+import { WSL_LOCALHOST_ALIAS } from "./wsl.ts";
+import { setupMocks } from "./mocks.ts";
 
 const { values } = parseArgs({
   args: Bun.argv,
@@ -20,9 +21,8 @@ if (!values.port || isNaN(Number(values.port))) {
 export async function launch(port: string) {
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
-  await setupRoutes(page);
-  // for WSL
-  await page.goto(`http://host.docker.internal:${port}`);
+  await setupMocks(page);
+  await page.goto(`http://${WSL_LOCALHOST_ALIAS}:${port}`);
 }
 
 await launch(values.port);

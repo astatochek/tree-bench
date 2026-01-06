@@ -16,4 +16,8 @@ import { tree } from "./app.config";
 })
 export class App {
   readonly tree = TreeNode.fromRaw(tree.json!);
+
+  constructor() {
+    delete tree.json;
+  }
 }

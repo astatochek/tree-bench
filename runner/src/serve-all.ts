@@ -1,32 +1,30 @@
-const frameworks = ["angular-signals", "angular-pull"];
+import { sut } from "./sut.ts";
 
 const pool: Bun.Subprocess[] = [];
 
-let port = 3000;
-frameworks.forEach((framework) => {
-  console.log("Started script for:", framework);
-  const proc = Bun.spawn(["bun", "run", "./serve.ts", "--port", `${port}`], {
-    cwd: `../frameworks/${framework}`,
+sut.forEach((ctx) => {
+  console.log("Started script for:", ctx.title);
+  const proc = Bun.spawn(["bun", "run", "./serve.ts", "--port", `${ctx.port}`], {
+    cwd: `../frameworks/${ctx.dir}`,
     stdout: "pipe",
     stderr: "pipe",
   });
 
-  const stdout = proc.stdout.getReader();
-
-  log(stdout);
+  pipeToConsole(proc.stdout.getReader(), "log");
+  pipeToConsole(proc.stderr.getReader(), "error");
 
   pool.push(proc);
-  port += 1;
 });
 
-async function log(
+async function pipeToConsole(
   reader: import("node:stream/web").ReadableStreamDefaultReader<Uint8Array<ArrayBuffer>>,
+  method: Extract<keyof typeof console, "log" | "error">,
 ) {
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
 
     const text = new TextDecoder().decode(value);
-    console.log(text);
+    console[method](text);
   }
 }

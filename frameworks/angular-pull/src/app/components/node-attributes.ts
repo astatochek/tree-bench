@@ -49,6 +49,7 @@ import { EditTreeService } from "../services/edit-tree.service";
                     <td class="px-4 py-3">
                       <div class="relative">
                         <input
+                            [attr.data-testid]="attr.title"
                             type="text"
                             [value]="attr.value"
                             (input)="setValue(attr.path, $event)"
