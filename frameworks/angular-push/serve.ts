@@ -24,23 +24,7 @@ const server = Bun.serve({
   port: values.port,
   routes: {
     "/": html.default,
-    //"/api/tree": Response.json(genTree(5, 5, 0, 0)),
   },
 });
 
 console.log(`Running Bun server on ${server.url} for Angular Push App`);
-
-function genTree(width: number, depth: number, level: number, index: number): any {
-  const children =
-    level === depth - 1
-      ? []
-      : Array.from(Array(width).keys()).map((index) => genTree(width, depth, level + 1, index));
-  return {
-    title: `Node ${level}-${index}`,
-    attributes: Array.from(Array(3).keys()).map((attrIdx) => ({
-      title: `attr ${level}-${index} #${attrIdx + 1}`,
-      value: "10",
-    })),
-    children,
-  };
-}
