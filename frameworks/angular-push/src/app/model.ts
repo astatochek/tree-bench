@@ -1,5 +1,6 @@
 export type DisplayedTreeNode = {
   title: string;
+  hasChildren: boolean;
   children: DisplayedTreeNode[];
   isEdited: boolean;
   path: number[];
@@ -12,22 +13,12 @@ export class TreeNode {
     readonly children: TreeNode[],
     readonly attributes: TreeNodeAttr[],
     readonly isExpanded = false,
+    readonly isSelfEdited = false,
+    readonly isEditedRecursive = false,
   ) {}
 
   isEdited(): boolean {
-    return this.isExpanded ? this.isSelfEdited() : this.isEditedRecursive();
-  }
-
-  private isSelfEdited(): boolean {
-    return this.attributes.some((attr) => attr.isEdited);
-  }
-
-  private isEditedRecursive(): boolean {
-    return this.isSelfEdited() || this.isSomeChildEdited();
-  }
-
-  private isSomeChildEdited(): boolean {
-    return this.children.some((c) => c.isEditedRecursive());
+    return this.isExpanded ? this.isSelfEdited : this.isEditedRecursive;
   }
 
   static fromRaw(node: RawTreeNode): TreeNode {
@@ -41,7 +32,10 @@ export class TreeNode {
   toDisplayed(path: number[]): DisplayedTreeNode {
     return {
       title: this.title,
-      children: this.children.map((c, index) => c.toDisplayed([...path, index])),
+      hasChildren: this.children.length !== 0,
+      children: this.isExpanded
+        ? this.children.map((c, index) => c.toDisplayed([...path, index]))
+        : [],
       path,
       isEdited: this.isEdited(),
       isExpanded: this.isExpanded,
@@ -118,6 +112,7 @@ export function setAttrValueAndUpdateTree(path: number[], root: TreeNode, value:
       nodesInPath[indexInPath],
       nodesInPath[indexInPath + 1],
       nodePath[indexInPath],
+      true,
     );
     indexInPath--;
   }
@@ -140,6 +135,7 @@ export function setExpandedAndUpdateTree(nodePath: number[], root: TreeNode): Tr
       nodesInPath[indexInPath],
       nodesInPath[indexInPath + 1],
       nodePath[indexInPath],
+      false,
     );
     indexInPath--;
   }
@@ -150,13 +146,48 @@ export function setExpandedAndUpdateTree(nodePath: number[], root: TreeNode): Tr
 function updateTreeNodeAttr(node: TreeNode, pos: number, value: string): TreeNode {
   const prev = node.attributes[pos];
   const next = new TreeNodeAttr(prev.title, value, true);
-  return new TreeNode(node.title, node.children, node.attributes.with(pos, next), node.isExpanded);
+  return new TreeNode(
+    node.title,
+    node.children,
+    node.attributes.with(pos, next),
+    node.isExpanded,
+    true,
+    true,
+  );
 }
 
 function toggleNodeExpand(node: TreeNode): TreeNode {
-  return new TreeNode(node.title, node.children, node.attributes, !node.isExpanded);
+  return new TreeNode(node.title, node.children, node.attributes, !node.isExpanded, node.isSelfEdited, node.isEditedRecursive);
 }
 
-function updateTreeNodeChild(node: TreeNode, child: TreeNode, pos: number): TreeNode {
-  return new TreeNode(node.title, node.children.with(pos, child), node.attributes, node.isExpanded);
+function updateTreeNodeChild(
+  node: TreeNode,
+  child: TreeNode,
+  pos: number,
+  checkIfEdited: boolean,
+): TreeNode {
+  if (checkIfEdited) {
+    const isSelfEdited = node.isSelfEdited;
+    const isEditedRecursive =
+      child.isSelfEdited ||
+      child.isEditedRecursive ||
+      isSelfEdited ||
+      node.children.some((node) => node.isSelfEdited || node.isEditedRecursive);
+    return new TreeNode(
+      node.title,
+      node.children.with(pos, child),
+      node.attributes,
+      node.isExpanded,
+      isSelfEdited,
+      isEditedRecursive,
+    );
+  }
+  return new TreeNode(
+    node.title,
+    node.children.with(pos, child),
+    node.attributes,
+    node.isExpanded,
+    node.isSelfEdited,
+    node.isEditedRecursive,
+  );
 }

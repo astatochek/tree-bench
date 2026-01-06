@@ -8,7 +8,7 @@ import { EditTreeService } from "../services/edit-tree.service";
   template: `
     <div class="ml-5" >
       <div class="flex items-center w-fit cursor-pointer py-2 min-h-8 rounded pr-2" [class]="isSelected() ? 'bg-blue-100' : ''" >
-        @if (node().children.length) {
+        @if (node().hasChildren) {
           <button
             class="p-1 mr-2 w-6 h-6 rounded hover:bg-gray-100
                focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2

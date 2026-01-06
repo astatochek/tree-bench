@@ -1,5 +1,6 @@
 export type DisplayedTreeNode = {
   title: string;
+  hasChildren: boolean;
   children: DisplayedTreeNode[];
   isEdited: boolean;
   path: number[];
@@ -41,7 +42,10 @@ export class TreeNode {
   toDisplayed(path: number[]): DisplayedTreeNode {
     return {
       title: this.title,
-      children: this.children.map((c, index) => c.toDisplayed([...path, index])),
+      hasChildren: this.children.length !== 0,
+      children: this.isExpanded
+        ? this.children.map((c, index) => c.toDisplayed([...path, index]))
+        : [],
       path,
       isEdited: this.isEdited(),
       isExpanded: this.isExpanded,
