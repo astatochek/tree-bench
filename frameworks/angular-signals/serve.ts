@@ -1,5 +1,6 @@
 import { parseArgs } from "util";
 import { $ } from "bun";
+import { getTestBed } from "@angular/core/testing";
 
 const { values } = parseArgs({
   args: Bun.argv,

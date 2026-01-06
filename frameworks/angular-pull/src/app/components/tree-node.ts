@@ -18,6 +18,7 @@ import { EditTreeService } from "../services/edit-tree.service";
         <span
           class="toggle-icon text-xs text-gray-600 transition-transform duration-200 inline-block"
           [class]="node().isExpanded ? '': '-rotate-90' "
+          [attr.data-testid]="'expand:' + node().title"
         >
           ▼
         </span>
@@ -29,10 +30,11 @@ import { EditTreeService } from "../services/edit-tree.service";
         <span
           (click)="this.selectedNodeProvider.selectedPath.set(node().path)"
           class="node-title text-sm text-gray-800 flex-1"
+          [title]="node().title"
         >{{ node().title }}</span>
 
         @if (node().isEdited) {
-          <span class="ml-2 text-sm">✏️</span>
+          <span class="ml-2 text-sm" [attr.data-testid]="'pencil:' + node().title">✏️</span>
         }
       </div>
 
