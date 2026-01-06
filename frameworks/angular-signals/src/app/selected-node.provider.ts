@@ -1,10 +1,9 @@
 import { Injectable, signal } from "@angular/core";
-import { Nil, TreeNode } from './model'
-
+import { Nil, TreeNode } from "./model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SelectedNodeProvider {
-  readonly selected = signal<TreeNode | Nil>(void 0)
+  readonly selected = signal<TreeNode | Nil>(void 0);
 }

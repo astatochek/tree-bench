@@ -1,9 +1,9 @@
 import { Component, computed, inject, input } from "@angular/core";
 import { TreeNode } from "./model";
-import { SelectedNodeProvider } from './selected-node.provider'
+import { SelectedNodeProvider } from "./selected-node.provider";
 
 @Component({
-  selector: 'tree-node',
+  selector: "tree-node",
   template: `
     <div class="ml-5" >
       <div class="flex items-center w-fit cursor-pointer py-2 min-h-8 rounded pr-2" [class]="isSelected() ? 'bg-blue-100' : ''" >
@@ -53,12 +53,13 @@ import { SelectedNodeProvider } from './selected-node.provider'
         </div>
       }
     </div>
-  `
+  `,
 })
 export class TreeNodeComponent {
   readonly selectedNodeProvider = inject(SelectedNodeProvider);
   readonly node = input.required<TreeNode>();
 
-  readonly isSelected = computed(() => Object.is(this.node(), this.selectedNodeProvider.selected()))
-
+  readonly isSelected = computed(() =>
+    Object.is(this.node(), this.selectedNodeProvider.selected()),
+  );
 }
