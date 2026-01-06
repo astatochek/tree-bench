@@ -3,7 +3,7 @@
   "type": "module",
   "module": "runner/src/index.ts",
   "scripts": {
-    "test": "cd runner && bun run test",
+    "serve:all": "cd runner && bun run serve:all",
     "format": "oxfmt",
     "serve:angular-signals": "cd frameworks/angular-signals && bun run serve.ts --port 8000",
     "serve:angular-pull": "cd frameworks/angular-pull && bun run serve.ts --port 8100"

@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { TreeNode } from "./model";
 import { TreeNodeComponent } from "./components/tree-node";
 import { NodeAttributesComponent } from "./components/node-attributes";
+import { tree } from "./app.config";
 
 @Component({
   selector: "app-root",
@@ -14,24 +15,5 @@ import { NodeAttributesComponent } from "./components/node-attributes";
   imports: [TreeNodeComponent, NodeAttributesComponent],
 })
 export class App {
-  readonly tree = TreeNode.fromRaw({
-    title: "Root Node 1",
-    attributes: [{ title: "attr1", value: "10" }],
-    children: [
-      {
-        title: "Child 1.1",
-        attributes: [{ title: "attr1.1", value: "10" }],
-        children: [
-          {
-            title: "Grandchild 1.1.1",
-            children: [],
-          },
-        ],
-      },
-      {
-        title: "Child 1.2",
-        children: [],
-      },
-    ],
-  });
+  readonly tree = TreeNode.fromRaw(tree.json!);
 }
