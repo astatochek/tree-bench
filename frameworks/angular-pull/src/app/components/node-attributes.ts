@@ -1,0 +1,90 @@
+import { Component, computed, inject } from "@angular/core";
+import { SelectedNodeProvider } from "../services/selected-node.provider";
+import { TreeNodeAttr } from "../model";
+import { EditTreeService } from "../services/edit-tree.service";
+
+@Component({
+  selector: "node-attributes",
+  template: `
+    <div class=" rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-800">
+          {{ node()?.title }}
+        </h3>
+      </div>
+      
+      @if (attributes().length) {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
+                Edited
+              </th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Title
+              </th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Value
+              </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @for (attr of attributes(); track $index) {
+                  <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <!-- Edited Column -->
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      @if (attr.isEdited) {
+                        <span>✏️</span>
+                      }
+                    </td>
+
+                    <!-- Title Column -->
+                    <td class="px-4 py-3">
+                <span class="text-sm font-medium text-gray-900">
+                  {{ attr.title }}
+                </span>
+                    </td>
+
+                    <td class="px-4 py-3">
+                      <div class="relative">
+                        <input
+                            type="text"
+                            [value]="attr.value"
+                            (input)="setValue(attr.path, $event)"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                           text-sm transition-colors duration-200"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+              }
+            </tbody>
+          </table>
+        </div> 
+      }
+    </div>
+  `,
+})
+export class NodeAttributesComponent {
+  readonly editTreeService = inject(EditTreeService);
+  readonly selectedNodeProvider = inject(SelectedNodeProvider);
+
+  readonly node = this.selectedNodeProvider.selectedNode;
+  readonly attributes = computed(() => {
+    const node = this.selectedNodeProvider.selectedNode();
+    const path = this.selectedNodeProvider.selectedPath();
+
+    if (!node || !path) {
+      return [];
+    }
+
+    return node.attrsToDisplayed(path);
+  });
+
+  setValue(path: number[], event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.editTreeService.setAttrValue(path, value);
+  }
+}
