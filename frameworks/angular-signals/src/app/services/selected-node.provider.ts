@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { Nil, TreeNode } from "./model";
+import { Nil, TreeNode } from "../model";
 
 @Injectable({
   providedIn: "root",

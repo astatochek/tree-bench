@@ -1,6 +1,6 @@
 import { Component, computed, inject } from "@angular/core";
-import { SelectedNodeProvider } from "./selected-node.provider";
-import { TreeNodeAttr } from "./model";
+import { SelectedNodeProvider } from "../services/selected-node.provider";
+import { TreeNodeAttr } from "../model";
 
 @Component({
   selector: "node-attributes",
@@ -34,9 +34,7 @@ import { TreeNodeAttr } from "./model";
                     <!-- Edited Column -->
                     <td class="px-4 py-3 whitespace-nowrap">
                       @if (attr.isEdited()) {
-                        <span class="text-orange-500" title="This attribute has been edited">
-                    ✏️
-                  </span>
+                        <span>✏️</span>
                       }
                     </td>
 

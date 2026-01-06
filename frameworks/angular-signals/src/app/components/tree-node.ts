@@ -1,6 +1,6 @@
 import { Component, computed, inject, input } from "@angular/core";
-import { TreeNode } from "./model";
-import { SelectedNodeProvider } from "./selected-node.provider";
+import { TreeNode } from "../model";
+import { SelectedNodeProvider } from "../services/selected-node.provider";
 
 @Component({
   selector: "tree-node",
@@ -28,16 +28,10 @@ import { SelectedNodeProvider } from "./selected-node.provider";
         <span
           (click)="this.selectedNodeProvider.selected.set(node())"
           class="node-title text-sm text-gray-800 flex-1"
-        >
-      {{ node().title }}
-    </span>
+        >{{ node().title }}</span>
 
         @if (node().isEdited()) {
-          <span
-            class="edit-indicator ml-2 text-sm opacity-70 text-orange-500 cursor-help"
-          >
-        ✏️
-      </span>
+          <span class="ml-2 text-sm">✏️</span>
         }
       </div>
 

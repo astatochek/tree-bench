@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { TreeNode } from "./model";
-import { TreeNodeComponent } from "./tree-node";
-import { NodeAttributesComponent } from "./node-attributes";
+import { TreeNodeComponent } from "./components/tree-node";
+import { NodeAttributesComponent } from "./components/node-attributes";
 
 @Component({
   selector: "app-root",

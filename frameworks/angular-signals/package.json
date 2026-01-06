@@ -36,6 +36,5 @@
     ],
     "printWidth": 100,
     "singleQuote": true
-  },
-  "packageManager": "npm@11.6.4"
+  }
 }
