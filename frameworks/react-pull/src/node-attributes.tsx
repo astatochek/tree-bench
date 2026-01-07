@@ -1,6 +1,7 @@
 import { useTree } from "@/tree-provider.tsx";
+import { memo } from 'react'
 
-export function NodeAttributes() {
+export const NodeAttributes = memo(() => {
   const tree = useTree();
   const node = tree.selectedNode;
   return (
@@ -72,4 +73,4 @@ export function NodeAttributes() {
       )}
     </div>
   );
-}
+})

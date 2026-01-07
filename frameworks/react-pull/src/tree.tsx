@@ -1,11 +1,12 @@
-import type { NodePath, TreeNode } from "@/model.ts";
+import type { TreeNode } from "@/model.ts";
 import { useTree } from "@/tree-provider.tsx";
+import { memo } from 'react'
 
 type Props = {
   node: TreeNode;
 };
 
-export function TreeNode({ node }: Props) {
+export const Tree = memo(({ node }: Props) =>  {
   const tree = useTree();
   const isSelected = tree.useIsSelected(node.path);
   const isEdited = tree.useIsEdited(node.path);
@@ -51,10 +52,10 @@ export function TreeNode({ node }: Props) {
       {node.isExpanded && node.children && (
         <div className="children-container border-l border-dashed border-gray-300 ml-3 pl-2">
           {node.children.map((child) => (
-            <TreeNode key={child.title} node={child} />
+            <Tree key={child.title} node={child} />
           ))}
         </div>
       )}
     </div>
   );
-}
+})
