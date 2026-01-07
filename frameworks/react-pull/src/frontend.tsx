@@ -17,7 +17,7 @@ async function start() {
   await fetch(`${window.location.origin}/api/tree`)
     .then((res) => res.json())
     .then((json) => {
-      tree.data = parse(json);
+      tree.data = parse(json, []);
     });
   const root = createRoot(document.getElementById("root")!);
   root.render(<App />);

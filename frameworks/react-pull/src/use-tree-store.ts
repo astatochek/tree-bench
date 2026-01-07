@@ -83,13 +83,6 @@ export function useTreeStore(initialRoot: TreeNode): TreeContextType {
     }, [path, selectedPath]);
   };
 
-  // Get memoized node data
-  const useNodeData = (path: NodePath) => {
-    return useMemo(() => {
-      return getNodeByPath(root, path);
-    }, [root, path]);
-  };
-
   return {
     root,
     getNode,

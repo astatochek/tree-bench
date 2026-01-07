@@ -3,13 +3,12 @@ import { useTree } from "@/tree-provider.tsx";
 
 type Props = {
   node: TreeNode;
-  path: NodePath;
 };
 
-export function TreeNode({ node, path }: Props) {
+export function TreeNode({ node }: Props) {
   const tree = useTree();
-  const isSelected = tree.useIsSelected(path);
-  const isEdited = tree.useIsEdited(path);
+  const isSelected = tree.useIsSelected(node.path);
+  const isEdited = tree.useIsEdited(node.path);
 
   return (
     <div className="ml-5">
@@ -21,7 +20,7 @@ export function TreeNode({ node, path }: Props) {
             className="toggle-button p-1 mr-2 w-6 h-6 rounded hover:bg-gray-100
                focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2
                transition-colors duration-200 flex items-center justify-center"
-            onClick={() => tree.toggleNodeExpansion(path)}
+            onClick={() => tree.toggleNodeExpansion(node.path)}
           >
             <span
               className={`toggle-icon text-xs text-gray-600 transition-transform duration-200 inline-block ${node.isExpanded ? "" : "-rotate-90"}`}
@@ -35,7 +34,7 @@ export function TreeNode({ node, path }: Props) {
         )}
 
         <span
-          onClick={() => tree.selectPath(path)}
+          onClick={() => tree.selectPath(node.path)}
           className="node-title text-sm text-gray-800 flex-1"
           title={node.title}
         >
@@ -51,8 +50,8 @@ export function TreeNode({ node, path }: Props) {
 
       {node.isExpanded && node.children && (
         <div className="children-container border-l border-dashed border-gray-300 ml-3 pl-2">
-          {node.children.map((child, index) => (
-            <TreeNode key={index} node={child} path={[...path, index]} />
+          {node.children.map((child) => (
+            <TreeNode key={child.title} node={child} />
           ))}
         </div>
       )}

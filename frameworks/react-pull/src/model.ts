@@ -11,6 +11,7 @@ export interface TreeNode {
   isExpanded: boolean;
   attributes: TreeNodeAttribute[];
   children: TreeNode[];
+  path: NodePath;
 }
 
 // Example: [0, 2, 1] means: root.children[0].children[2].children[1]
@@ -75,11 +76,12 @@ export type RawTreeNode = {
   attributes?: { title: string; value: string }[];
 };
 
-export function parse(raw: RawTreeNode): TreeNode {
+export function parse(raw: RawTreeNode, path: NodePath): TreeNode {
   return {
     title: raw.title,
     isExpanded: false,
-    children: raw.children?.map(parse) ?? [],
+    children: raw.children?.map((raw, index) => parse(raw, [...path, index])) ?? [],
     attributes: raw.attributes?.map((attr) => ({ ...attr, isEdited: false })) ?? [],
+    path,
   };
 }
