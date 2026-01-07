@@ -1,9 +1,24 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import App from "./App.vue";
+import type { Nil, RawTreeNode } from "@/model.ts";
 
-const app = createApp(App)
+export const prefetched: { tree: RawTreeNode | Nil } = { tree: null };
 
-app.use(createPinia())
+function mount() {
+  const app = createApp(App);
+  app.use(createPinia());
+  app.mount("#app");
+}
 
-app.mount('#app')
+async function main() {
+  await fetch(`${window.location.origin}/api/tree`)
+    .then((res) => res.json())
+    .then((json) => {
+      prefetched.tree = json;
+    });
+
+  mount();
+}
+
+main();

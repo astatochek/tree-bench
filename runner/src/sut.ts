@@ -6,10 +6,11 @@ export type Context = {
 };
 
 export const sut: Context[] = [
-  { title: "Angular Signals", dir: "angular-signals", port: 3000, results: [] },
-  { title: "Angular Pull", dir: "angular-pull", port: 3001, results: [] },
-  { title: "Angular Push", dir: "angular-push", port: 3002, results: [] },
-  { title: "React Pull", dir: "react-pull", port: 3003, results: [] },
-  { title: "React Push", dir: "react-push", port: 3004, results: [] },
-  { title: "Solid Signals", dir: "solid-signals", port: 3005, results: [] },
+  //{ title: "Angular Signals", dir: "angular-signals", port: 3000, results: [] },
+  //{ title: "Angular Pull", dir: "angular-pull", port: 3001, results: [] },
+  //{ title: "Angular Push", dir: "angular-push", port: 3002, results: [] },
+  //{ title: "React Pull", dir: "react-pull", port: 3003, results: [] },
+  //{ title: "React Push", dir: "react-push", port: 3004, results: [] },
+  //  { title: "Solid Signals", dir: "solid-signals", port: 3005, results: [] },
+  { title: "Vue Push", dir: "vue-push", port: 3006, results: [] },
 ];
