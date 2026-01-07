@@ -30,6 +30,6 @@ async function pencilAppearsAfterEdit(page: Page, ctx: Context) {
 
   return res.durationMillis;
 }
-await run(sut, pencilAppearsAfterEdit);
+await run(sut, pencilAppearsAfterEdit, { warmup: 5, runs: 10 });
 
 sut.map(report);

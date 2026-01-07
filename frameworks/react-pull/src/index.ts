@@ -5,28 +5,7 @@ const server = serve({
   routes: {
     // Serve index.html for all unmatched routes.
     "/*": index,
-
-    "/api/hello": {
-      async GET(req) {
-        return Response.json({
-          message: "Hello, world!",
-          method: "GET",
-        });
-      },
-      async PUT(req) {
-        return Response.json({
-          message: "Hello, world!",
-          method: "PUT",
-        });
-      },
-    },
-
-    "/api/hello/:name": async (req) => {
-      const name = req.params.name;
-      return Response.json({
-        message: `Hello, ${name}!`,
-      });
-    },
+    "/api/tree": Response.json(genTree(5, 5, 0, 0)),
   },
 
   development: process.env.NODE_ENV !== "production" && {
@@ -39,3 +18,18 @@ const server = serve({
 });
 
 console.log(`🚀 Server running at ${server.url}`);
+
+function genTree(width: number, depth: number, level: number, index: number): any {
+  const children =
+    level === depth - 1
+      ? []
+      : Array.from(Array(width).keys()).map((index) => genTree(width, depth, level + 1, index));
+  return {
+    title: `Node ${level}-${index}`,
+    attributes: Array.from(Array(3).keys()).map((attrIdx) => ({
+      title: `attr ${level}-${index} #${attrIdx + 1}`,
+      value: "10",
+    })),
+    children,
+  };
+}

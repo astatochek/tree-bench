@@ -1,16 +1,19 @@
-import React, { createContext, useContext, type ReactNode } from "react";
-import type { Nil, NodePath, TreeNode } from "./model";
+import { createContext, useContext, type ReactNode } from "react";
+import type { Nil } from "./model";
 import { useTreeStore, type TreeContextType } from "@/use-tree-store.ts";
+import { tree } from "@/frontend.tsx";
 
 const TreeContext = createContext<TreeContextType | Nil>(null);
 
 interface TreeProviderProps {
-  initialRoot: TreeNode;
   children: ReactNode;
 }
 
-export function TreeProvider({ initialRoot, children }: TreeProviderProps) {
-  const treeStore = useTreeStore(initialRoot);
+export function TreeProvider({ children }: TreeProviderProps) {
+  const treeStore = useTreeStore(tree.data!);
+  if (tree.data) {
+    delete tree.data;
+  }
 
   return <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>;
 }
