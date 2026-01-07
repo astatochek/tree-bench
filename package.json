@@ -4,10 +4,8 @@
   "module": "runner/src/index.ts",
   "scripts": {
     "serve:all": "cd runner && bun run serve:all",
-    "launch:chrome:wsl": "cd runner && bun run launch:chrome:wsl",
     "format": "oxfmt",
-    "serve:angular-signals": "cd frameworks/angular-signals && bun run serve.ts --port 8000",
-    "serve:angular-pull": "cd frameworks/angular-pull && bun run serve.ts --port 8100"
+    "install:all": "bun run install.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
