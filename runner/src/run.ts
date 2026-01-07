@@ -33,10 +33,10 @@ async function setup() {
   return page;
 }
 
-function* integers(max?: number) {
+function* integers(max = Number.MAX_SAFE_INTEGER - 1) {
   let i = 1;
   while (true) {
-    if (max && i === max + 1) {
+    if (i >= max + 1) {
       break;
     }
     yield i++;
