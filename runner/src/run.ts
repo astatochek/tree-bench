@@ -9,20 +9,30 @@ export type RunConfig = {
   runs?: number;
 };
 
-export async function run(sut: Context[], test: Test, { warmup = 5, runs = 10 }: RunConfig = {}) {
+export async function run(sut: Context[], test: Test, { runs = 10 }: RunConfig = {}) {
   for await (const ctx of sut) {
-    const page = await setup();
-
-    for await (const _ of integers(warmup)) {
-      await test(page, ctx);
-    }
-
-    for await (const _ of integers(runs)) {
+    await tryRun(async () => {
+      const page = await setup();
       const res = await test(page, ctx);
       ctx.results.push(res);
-    }
+      await page.close();
+    }, runs);
+  }
+}
 
-    await page.close();
+async function tryRun(fn: () => Promise<unknown>, times: number) {
+  let count = 0;
+  for await (const _ of integers()) {
+    if (count >= times) {
+      break;
+    }
+    try {
+      await fn();
+      count++;
+    } catch (error: unknown) {
+      console.error(`Failed run #${count};`);
+      console.error(error);
+    }
   }
 }
 
