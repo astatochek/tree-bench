@@ -8,8 +8,21 @@ import {
   updateNodeAtPath,
 } from "@/model.ts";
 
-export function useTreeStore(initialRoot: TreeNode) {
+export interface TreeContextType {
+  root: TreeNode;
+  updateAttribute: (path: NodePath, attributeTitle: string, value: string) => void;
+  toggleNodeExpansion: (path: NodePath) => void;
+  useIsEdited: (path: NodePath) => boolean;
+  getNode: (path: NodePath) => TreeNode | Nil;
+  useIsSelected: (path: NodePath) => boolean;
+  selectPath: (path: NodePath) => void;
+  selectedNode: TreeNode | Nil;
+  selectedPath: NodePath | Nil;
+}
+
+export function useTreeStore(initialRoot: TreeNode): TreeContextType {
   const [root, setRoot] = useState<TreeNode>(initialRoot);
+  const [selectedPath, selectPath] = useState<NodePath | Nil>(void 0);
 
   // Get node by path
   const getNode = useCallback(
@@ -18,6 +31,13 @@ export function useTreeStore(initialRoot: TreeNode) {
     },
     [root],
   );
+
+  const selectedNode = useMemo(() => {
+    if (!selectedPath) {
+      return;
+    }
+    return getNodeByPath(root, selectedPath);
+  }, [root, selectedPath]);
 
   // Update attribute value
   const updateAttribute = useCallback((path: NodePath, attributeTitle: string, value: string) => {
@@ -50,6 +70,20 @@ export function useTreeStore(initialRoot: TreeNode) {
     }, [root, path]); // path as dependency array element
   };
 
+  const useIsSelected = (path: NodePath) => {
+    return useMemo(() => {
+      if (!selectedPath || path.length !== selectedPath.length) {
+        return false;
+      }
+      for (let i = 0; i < path.length; i++) {
+        if (path[i] !== selectedPath[i]) {
+          return false;
+        }
+      }
+      return true;
+    }, [path, selectedPath]);
+  };
+
   // Get memoized node data
   const useNodeData = (path: NodePath) => {
     return useMemo(() => {
@@ -63,6 +97,9 @@ export function useTreeStore(initialRoot: TreeNode) {
     updateAttribute,
     toggleNodeExpansion,
     useIsEdited,
-    useNodeData,
+    selectPath,
+    useIsSelected,
+    selectedNode,
+    selectedPath,
   };
 }

@@ -2,6 +2,7 @@ import "./index.css";
 import { TreeProvider, useTree } from "@/tree-provider.tsx";
 import { type NodePath, parse } from "./model";
 import { TreeNode } from "@/tree-node.tsx";
+import { NodeAttributes } from "@/node-attributes.tsx";
 
 const tree = {
   json: parse(genTree(5, 5, 0, 0)),
@@ -22,6 +23,7 @@ function Main() {
   return (
     <main className="grid grid-cols-2 p-4">
       <TreeNode node={tree.root} path={INITIAL_PATH} />
+      <NodeAttributes />
     </main>
   );
 }

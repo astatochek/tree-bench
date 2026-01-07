@@ -8,7 +8,7 @@ type Props = {
 
 export function TreeNode({ node, path }: Props) {
   const tree = useTree();
-  const isSelected = false;
+  const isSelected = tree.useIsSelected(path);
   const isEdited = tree.useIsEdited(path);
 
   return (
@@ -34,7 +34,11 @@ export function TreeNode({ node, path }: Props) {
           <span className="w-6 mr-2"></span>
         )}
 
-        <span className="node-title text-sm text-gray-800 flex-1" title={node.title}>
+        <span
+          onClick={() => tree.selectPath(path)}
+          className="node-title text-sm text-gray-800 flex-1"
+          title={node.title}
+        >
           {node.title}
         </span>
 
