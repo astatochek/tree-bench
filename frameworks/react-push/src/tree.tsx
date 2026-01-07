@@ -9,7 +9,7 @@ type Props = {
 export const Tree = memo(({ node }: Props) => {
   const tree = useTree();
   const isSelected = tree.useIsSelected(node.path);
-  const isEdited = tree.useIsEdited(node.path);
+  const isEdited = node.isExpanded ? node.isOwnEdited : node.isOwnEdited || node.isEditedDescendant;
 
   return (
     <div className="ml-5">
