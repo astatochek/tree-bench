@@ -5,7 +5,8 @@
   "scripts": {
     "serve:all": "cd runner && bun run serve:all",
     "format": "oxfmt",
-    "install:all": "bun run install.ts"
+    "install:all": "bun run install.ts",
+    "cases:wsl": "cd runner && bun run cases:wsl"
   },
   "devDependencies": {
     "@types/bun": "latest",

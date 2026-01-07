@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "serve:all": "bun run src/serve-all.ts",
-    "cases": "bun run src/run-cases.ts"
+    "cases:wsl": "bun run src/run-cases.ts"
   },
   "dependencies": {
     "playwright": "1.57.0"
