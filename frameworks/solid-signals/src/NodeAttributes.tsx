@@ -1,0 +1,77 @@
+import { Component, For, Show, useContext } from "solid-js";
+import { SelectedNodeContext } from "./SelectedNodeProvider";
+
+export const NodeAttributes: Component = () => {
+  const selectedNodeService = useContext(SelectedNodeContext);
+  const node = () => selectedNodeService.selected.get();
+  const attributes = () => node()?.attributes ?? [];
+  return (
+    <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-800">{node()?.title}</h3>
+      </div>
+
+      <Show when={attributes().length}>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16"
+                >
+                  Edited
+                </th>
+                <th
+                  scope="col"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Title
+                </th>
+                <th
+                  scope="col"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Value
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <For each={attributes()}>
+                {(attr) => (
+                  <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      <Show when={attr.isEdited.get()}>
+                        <span>✏️</span>
+                      </Show>
+                    </td>
+
+                    <td class="px-4 py-3">
+                      <span class="text-sm font-medium text-gray-900">{attr.title}</span>
+                    </td>
+
+                    <td class="px-4 py-3">
+                      <div class="relative">
+                        <input
+                          data-testid={attr.title}
+                          type="text"
+                          value={attr.value}
+                          onInput={(event) => {
+                            attr.value = event.currentTarget.value;
+                          }}
+                          class="w-full px-3 py-2 border border-gray-300 rounded-md
+                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                        text-sm transition-colors duration-200"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </For>
+            </tbody>
+          </table>
+        </div>
+      </Show>
+    </div>
+  );
+};

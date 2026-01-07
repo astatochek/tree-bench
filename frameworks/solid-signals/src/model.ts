@@ -2,27 +2,27 @@ import { Accessor, createMemo, createSignal, Setter, Signal } from "solid-js";
 
 type UnwrappedSignal<T> = Readonly<{ get: Accessor<T>; set: Setter<T> }>;
 
-function unwrap<T>(signal: Signal<T>): UnwrappedSignal<T> {
+export function unwrapSignal<T>(signal: Signal<T>): UnwrappedSignal<T> {
   const [get, set] = signal;
   return { get, set };
 }
 
 export class TreeNode {
-  readonly isExpanded = unwrap(createSignal(false));
+  readonly isExpanded = unwrapSignal(createSignal(false));
   readonly isSelfEdited: Accessor<boolean>;
-  readonly isEditedRecursive : Accessor<boolean>;
-  readonly isEdited : Accessor<boolean>;
+  readonly isEditedRecursive: Accessor<boolean>;
+  readonly isEdited: Accessor<boolean>;
 
   constructor(
     readonly title: string,
     readonly children: TreeNode[],
     readonly attributes: TreeNodeAttr[],
   ) {
-      this.isSelfEdited = createMemo(() => this.attributes.some((attr) => attr.isEdited.get()));
-      this.isEditedRecursive = createMemo(() => this.isSelfEdited() || this.isSomeChildEdited());
-      this.isEdited = createMemo(() =>
-          this.isExpanded.get() ? this.isSelfEdited() : this.isEditedRecursive(),
-      );
+    this.isSelfEdited = createMemo(() => this.attributes.some((attr) => attr.isEdited.get()));
+    this.isEditedRecursive = createMemo(() => this.isSelfEdited() || this.isSomeChildEdited());
+    this.isEdited = createMemo(() =>
+      this.isExpanded.get() ? this.isSelfEdited() : this.isEditedRecursive(),
+    );
   }
 
   private isSomeChildEdited(): boolean {
@@ -39,7 +39,7 @@ export class TreeNode {
 }
 
 export class TreeNodeAttr {
-  readonly isEdited = unwrap(createSignal(false));
+  readonly isEdited = unwrapSignal(createSignal(false));
 
   private readonly valueInternal: UnwrappedSignal<string>;
 
@@ -56,7 +56,7 @@ export class TreeNodeAttr {
     readonly title: string,
     value: string,
   ) {
-    this.valueInternal = unwrap(createSignal(value));
+    this.valueInternal = unwrapSignal(createSignal(value));
   }
 
   static fromRaw(attr: RawTreeNodeAttr): TreeNodeAttr {

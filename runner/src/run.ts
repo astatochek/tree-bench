@@ -1,6 +1,7 @@
 import { type Context } from "./sut.ts";
 import { chromium, type Page } from "playwright";
 import { setupMocks } from "./mocks.ts";
+import { report } from "./report.ts";
 
 export type Test = (page: Page, ctx: Context) => Promise<number>;
 
@@ -9,14 +10,26 @@ export type RunConfig = {
   runs?: number;
 };
 
-export async function run(sut: Context[], test: Test, { runs = 10 }: RunConfig = {}) {
+export async function run(sut: Context[], test: Test, { warmup = 5, runs = 10 }: RunConfig = {}) {
+  const browser = await chromium.launch({ headless: false });
   for await (const ctx of sut) {
+    const page = await browser.newPage();
+    await setupMocks(page);
+
     await tryRun(async () => {
-      const page = await setup();
+      await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+      await test(page, ctx);
+    }, warmup);
+
+    await tryRun(async () => {
+      await page.goto(`http://${process.env.HOST}:${ctx.port}`);
       const res = await test(page, ctx);
       ctx.results.push(res);
-      await page.close();
     }, runs);
+
+    report(ctx);
+
+    await page.close();
   }
 }
 

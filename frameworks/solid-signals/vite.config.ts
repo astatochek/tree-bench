@@ -8,6 +8,14 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  preview: {
+    proxy: {
+      "/api": {
+        bypass: () => false,
+      },
+    },
+    host: process.env.HOST,
+  },
   build: {
     target: "esnext",
   },

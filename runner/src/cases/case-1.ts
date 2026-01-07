@@ -1,13 +1,8 @@
 import { type Page } from "playwright";
-import { type Context, sut } from "../sut.ts";
-import { WSL_LOCALHOST_ALIAS } from "../wsl.ts";
-import { run } from "../run.ts";
-import { report } from "../report.ts";
+import { type Context } from "../sut.ts";
 import { TimelineHarness } from "../harness/harness.ts";
 
-async function pencilAppearsAfterEdit(page: Page, ctx: Context) {
-  await page.goto(`http://${WSL_LOCALHOST_ALIAS}:${ctx.port}`);
-
+export async function pencilAppearsAfterEdit(page: Page, ctx: Context) {
   await page.getByTestId(`expand:Node 0-0`).click();
   await page.getByTestId(`expand:Node 1-9`).click();
   await page.getByTestId(`expand:Node 2-9`).click();
@@ -30,6 +25,3 @@ async function pencilAppearsAfterEdit(page: Page, ctx: Context) {
 
   return res.durationMillis;
 }
-await run(sut, pencilAppearsAfterEdit, { warmup: 5, runs: 10 });
-
-sut.map(report);
