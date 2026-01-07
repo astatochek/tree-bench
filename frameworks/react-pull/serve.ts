@@ -18,7 +18,7 @@ if (!values.port || isNaN(Number(values.port))) {
 
 await $`bun run build`;
 
-const html = await import("./dist/angular-signals/browser/index.html");
+const html = await import("./dist/index.html");
 
 const server = Bun.serve({
   port: values.port,
@@ -27,4 +27,4 @@ const server = Bun.serve({
   },
 });
 
-console.log(`Running Bun server on ${server.url} for Angular Signals App`);
+console.log(`Running Bun server on ${server.url} for React Pull App`);
