@@ -53,7 +53,6 @@ export function useTreeStore(initialRoot: TreeNode): TreeContextType {
 
   // Toggle node expansion
   const toggleNodeExpansion = useCallback((path: NodePath) => {
-    debugger;
     setRoot((prevRoot) =>
       updateNodeAtPath(prevRoot, path, (node) => ({
         ...node,

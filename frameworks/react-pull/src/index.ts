@@ -5,7 +5,7 @@ const server = serve({
   routes: {
     // Serve index.html for all unmatched routes.
     "/*": index,
-    "/api/tree": Response.json(genTree(5, 5, 0, 0)),
+    "/api/tree": Response.json(genTree(10, 6, 0, 0)),
   },
 
   development: process.env.NODE_ENV !== "production" && {
