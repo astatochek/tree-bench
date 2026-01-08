@@ -14,7 +14,7 @@ function formatMeanWithStd(mean: number, stdDev: number, decimals: number = 2): 
   return `${formatTime(mean, decimals)} ± ${formatTime(stdDev, decimals)}`;
 }
 
-export function createBenchmarkReport(
+export function createCPUBenchmarkReport(
   results: BenchmarkResult[],
   tree: TreeOptions,
   test: Test,

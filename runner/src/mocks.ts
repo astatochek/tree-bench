@@ -3,12 +3,11 @@ import type { Page, Route, Request } from "playwright";
 export type TreeOptions = { width: number; depth: number };
 
 export async function setupMocks(page: Page, options: TreeOptions) {
+  const tree = genTree(options.width, options.depth, 0, 0);
   await page.route(
     (url) => url.pathname.includes("api/tree"),
     async (route: Route, request: Request) => {
-      await route.fulfill({
-        json: genTree(options.width, options.depth, 0, 0),
-      });
+      await route.fulfill({ json: tree });
     },
   );
 }

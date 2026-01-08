@@ -1,6 +1,5 @@
 import { type Page } from "playwright";
-import { type Context } from "../sut.ts";
-import { TimelineHarness } from "../harness/harness.ts";
+import { TimelineHarness } from "../harness/timeline-harness.ts";
 import type { TreeOptions } from "../mocks.ts";
 import type { Test } from "../run.ts";
 
