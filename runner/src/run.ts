@@ -1,36 +1,41 @@
 import { type Context } from "./sut.ts";
 import { chromium, type Page } from "playwright";
-import { setupMocks } from "./mocks.ts";
-import { report } from "./report.ts";
+import { setupMocks, type TreeOptions } from "./mocks.ts";
+import { createBenchmarkReport } from "./report.ts";
+import { toBenchmarkResult } from "./stats.ts";
 
-export type Test = (page: Page, ctx: Context) => Promise<number>;
+export type Test = {
+  name: string;
+  run: (page: Page, tree: TreeOptions) => Promise<number>;
+};
 
 export type RunConfig = {
   warmup?: number;
   runs?: number;
+  tree: TreeOptions;
 };
 
-export async function run(sut: Context[], test: Test, { warmup = 5, runs = 10 }: RunConfig = {}) {
+export async function run(sut: Context[], test: Test, { warmup = 5, runs = 10, tree }: RunConfig) {
   const browser = await chromium.launch({ headless: false });
   for await (const ctx of sut) {
     const page = await browser.newPage();
-    await setupMocks(page);
+    await setupMocks(page, tree);
 
     await tryRun(async () => {
       await page.goto(`http://${process.env.HOST}:${ctx.port}`);
-      await test(page, ctx);
+      await test.run(page, tree);
     }, warmup);
 
     await tryRun(async () => {
       await page.goto(`http://${process.env.HOST}:${ctx.port}`);
-      const res = await test(page, ctx);
+      const res = await test.run(page, tree);
       ctx.results.push(res);
     }, runs);
 
-    report(ctx);
-
     await page.close();
   }
+
+  createBenchmarkReport(sut.map(toBenchmarkResult), tree, test);
 }
 
 async function tryRun(fn: () => Promise<unknown>, times: number) {
@@ -47,13 +52,6 @@ async function tryRun(fn: () => Promise<unknown>, times: number) {
       console.error(error);
     }
   }
-}
-
-async function setup() {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
-  await setupMocks(page);
-  return page;
 }
 
 function* integers(max = Number.MAX_SAFE_INTEGER - 1) {

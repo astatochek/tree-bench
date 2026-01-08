@@ -1,16 +1,11 @@
-import type { Page, Route, Request } from "playwright";
+import { json, error } from "@sveltejs/kit";
+import { dev } from "$app/environment";
 
-export type TreeOptions = { width: number; depth: number };
-
-export async function setupMocks(page: Page, options: TreeOptions) {
-  await page.route(
-    (url) => url.pathname.includes("api/tree"),
-    async (route: Route, request: Request) => {
-      await route.fulfill({
-        json: genTree(options.width, options.depth, 0, 0),
-      });
-    },
-  );
+export async function GET() {
+  if (dev) {
+    return json(genTree(5, 5, 0, 0));
+  }
+  return error(403);
 }
 
 function genTree(width: number, depth: number, level: number, index: number): any {

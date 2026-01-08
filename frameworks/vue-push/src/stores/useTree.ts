@@ -1,7 +1,7 @@
 import { ref, computed, shallowRef } from "vue";
 import { defineStore } from "pinia";
 import { type NodePath, parse, updateNodeAtPath } from "@/model.ts";
-import { prefetched } from '@/main.ts'
+import { prefetched } from "@/main.ts";
 
 export const useTreeStore = defineStore("tree", () => {
   const tree = shallowRef(parse(prefetched.tree!, []));
