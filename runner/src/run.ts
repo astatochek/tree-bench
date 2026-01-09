@@ -14,12 +14,13 @@ export type CPUBenchmarkRunConfig = {
   warmup?: number;
   runs?: number;
   tree: TreeOptions;
+  silent?: boolean
 };
 
 export async function runCPUBenchmark(
   sut: Context[],
   test: Test,
-  { warmup = 5, runs = 10, tree }: CPUBenchmarkRunConfig,
+  { warmup = 5, runs = 10, tree, silent = true }: CPUBenchmarkRunConfig,
 ) {
   const browser = await chromium.launch({
     headless: false,
@@ -32,13 +33,13 @@ export async function runCPUBenchmark(
     await tryRun(async () => {
       await page.goto(`http://${process.env.HOST}:${ctx.port}`);
       await test.run(page, tree);
-    }, warmup);
+    }, warmup, silent);
 
     await tryRun(async () => {
       await page.goto(`http://${process.env.HOST}:${ctx.port}`);
       const res = await test.run(page, tree);
       ctx.results.push(res);
-    }, runs);
+    }, runs, silent);
 
     await page.close();
   }
@@ -73,7 +74,7 @@ export async function runMemoryBenchmark(
       await page.goto(`http://${process.env.HOST}:${ctx.port}`);
       const res = await test.run(page, tree);
       ctx.results.push(res);
-    }, 1);
+    }, 1, true);
     await page.close();
   }
 
@@ -84,7 +85,7 @@ export async function runMemoryBenchmark(
   );
 }
 
-async function tryRun(fn: () => Promise<unknown>, times: number) {
+async function tryRun(fn: () => Promise<unknown>, times: number, silent: boolean) {
   let count = 0;
   for await (const _ of integers()) {
     if (count >= times) {
@@ -94,8 +95,10 @@ async function tryRun(fn: () => Promise<unknown>, times: number) {
       await fn();
       count++;
     } catch (error: unknown) {
-      console.error(`Failed run #${count};`);
-      console.error(error);
+        if (!silent) {
+            console.error(`Failed run #${count};`);
+            console.error(error);
+        }
     }
   }
 }

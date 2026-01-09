@@ -11,7 +11,7 @@ export function createMemoryBenchmarkReport(
   const bestMemory = sortedResults[0]!.memoryUsed;
 
   console.log("\n" + "=".repeat(70));
-  console.log(`💾 ${test.name} (depth=${tree.width}, depth=${tree.depth})`);
+  console.log(`💾 ${test.name} ${tree.getInfoLine()}`);
   console.log("=".repeat(70));
 
   console.log("\n📊 MEMORY CONSUMPTION (sorted by memory usage, lower is better):");

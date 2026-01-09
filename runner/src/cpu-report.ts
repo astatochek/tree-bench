@@ -26,7 +26,7 @@ export function createCPUBenchmarkReport(
   const fastestMean = sortedResults[0]!.stats.mean;
 
   console.log("\n" + "=".repeat(80));
-  console.log(`📊 ${test.name} (depth=${tree.depth}, width=${tree.width})`);
+  console.log(`📊 ${test.name} ${tree.getInfoLine()}`);
   console.log("=".repeat(80));
 
   // Main table with key metrics
