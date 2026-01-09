@@ -11,7 +11,7 @@ export default defineConfig({
       "/api": {
         bypass: (req, res, options) => {
           res!.writeHead(200, { "Content-Type": "application/json" });
-          res!.end(JSON.stringify(genTree(8, 6, 0, 0)));
+          res!.end(JSON.stringify(genTree(8, 7, 0, 0)));
           return false;
         },
       },

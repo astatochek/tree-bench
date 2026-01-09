@@ -42,36 +42,18 @@ export class TimelineHarness {
 
     // Start tracing with performance categories
     await this.cdpSession.send("Tracing.start", {
-      categories: [
-        "-*", // Disable all default categories first
-
-        // Enable specific performance categories
-        "devtools.timeline",
-        "disabled-by-default-devtools.timeline",
-        "disabled-by-default-devtools.timeline.frame",
-        "disabled-by-default-devtools.timeline.stack",
-        "toplevel",
-        "benchmark",
-        "v8.execute",
-        "blink.user_timing",
-        "latencyInfo",
-        "cc",
-        "gpu",
-        "input",
-
-        // Paint/rendering categories
-        "disabled-by-default-devtools.timeline.layers",
-        "disabled-by-default-devtools.timeline.picture",
-        "disabled-by-default-layout_shift.debug",
-        "blink.invalidation",
-        "blink.style",
-
-        // Memory/GC
-        "disabled-by-default-devtools.timeline.memory",
-        "v8",
-      ].join(","),
-      options: "record-until-full",
-      bufferUsageReportingInterval: 1000,
+      traceConfig: {
+        includedCategories: [
+          "devtools.timeline",
+          "input",
+          "blink",
+          "latencyInfo",
+          "benchmark",
+          "cc",
+        ],
+        excludedCategories: ["*"],
+        recordMode: "recordUntilFull",
+      },
     });
 
     this.isTracing = true;
@@ -152,10 +134,12 @@ export class TimelineHarness {
     // Stop tracing and get performance events
     const events = await this.stopCDPTracing();
 
-    //await Bun.write(Bun.file(`logs-${Date.now()}.json`), JSON.stringify(events));
-
     // Analyze the performance timeline
     const result = this.analyzePerformanceEvents(events);
+
+    //if (result.relevantCommitDurationMillis >= 10) {
+    //    await Bun.write(Bun.file(`trace-${Date.now()}.json`), JSON.stringify(this.traceDataBuffer));
+    //}
 
     return {
       ...result,
@@ -168,7 +152,9 @@ export class TimelineHarness {
    */
   private analyzePerformanceEvents(
     events: TraceEvent[],
-  ): Pick<TimelineResult, "durationMillis" | "clickStart" | "commitEnd" | "eventsProcessed"> {
+  ): Pick<TimelineResult, "durationMillis" | "clickStart" | "commitEnd" | "eventsProcessed"> & {
+    relevantCommitDurationMillis: number;
+  } {
     // Find input/click events
     const inputEvents = this.findInputEvents(events);
 
@@ -196,6 +182,8 @@ export class TimelineHarness {
       throw new Error("No commit event found");
     }
 
+    const relevantCommitDurationMillis = (relevantCommit.dur ?? 0) / 1000;
+
     const durationMs = (relevantCommit.end - triggerStartTime) / 1000;
 
     return {
@@ -203,6 +191,7 @@ export class TimelineHarness {
       clickStart: triggerStartTime,
       commitEnd: relevantCommit.end,
       eventsProcessed: postTriggerEvents.length,
+      relevantCommitDurationMillis,
     };
   }
 
@@ -238,8 +227,13 @@ export class TimelineHarness {
    * Find commit events
    */
   private findCommitEvents(events: TraceEvent[]): TraceEvent[] {
+    const isCommit = (e: TraceEvent) => {
+      const name = e.name.toLowerCase();
+      return name === "commit" || name === "proxymain::beginmainframe::commit";
+    };
+
     return events.filter((e) => {
-      return e.name === "Commit" && e.ph === "X";
+      return isCommit(e) && e.ph === "X";
     });
   }
 }
