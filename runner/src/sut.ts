@@ -11,8 +11,9 @@ export const sut: Context[] = [
   { title: "Angular Push", dir: "angular-push", port: 3002, results: [] },
   { title: "React Pull", dir: "react-pull", port: 3003, results: [] },
   { title: "React Push", dir: "react-push", port: 3004, results: [] },
-  { title: "Solid Signals", dir: "solid-signals", port: 3005, results: [] },
-  { title: "Vue Push", dir: "vue-push", port: 3006, results: [] },
-  { title: "Vue Signals", dir: "vue-signals", port: 3007, results: [] },
-  { title: "Svelte Signals", dir: "svelte-signals", port: 3008, results: [] },
+  { title: "Solid Push", dir: "solid-push", port: 3005, results: [] },
+  { title: "Solid Signals", dir: "solid-signals", port: 3006, results: [] },
+  { title: "Vue Push", dir: "vue-push", port: 3007, results: [] },
+  { title: "Vue Signals", dir: "vue-signals", port: 3008, results: [] },
+  { title: "Svelte Signals", dir: "svelte-signals", port: 3009, results: [] },
 ];

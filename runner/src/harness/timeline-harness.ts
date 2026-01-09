@@ -150,9 +150,10 @@ export class TimelineHarness {
   /**
    * Analyze Chrome performance timeline events
    */
-  private analyzePerformanceEvents(
-    events: TraceEvent[],
-  ): Pick<TimelineResult, "durationMillis" | "clickStart" | "commitEnd" | "eventsProcessed"> & {
+  private analyzePerformanceEvents(events: TraceEvent[]): Pick<
+    TimelineResult,
+    "durationMillis" | "clickStart" | "commitEnd" | "eventsProcessed"
+  > & {
     relevantCommitDurationMillis: number;
   } {
     // Find input/click events
