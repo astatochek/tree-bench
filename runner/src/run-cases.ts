@@ -1,4 +1,4 @@
-import { pencilAppearsAfterEdit } from "./cpu-cases/pencil-appears-after-edit.ts";
+import { pencilAppearsOnEditedNodeAfterEdit } from "./cpu-cases/pencil-appears-on-edited-node-after-edit.ts";
 import { runCPUBenchmark, runMemoryBenchmark } from "./run.ts";
 import { sut } from "./sut.ts";
 import { traverseTree } from "./mem-cases/traverse-tree.ts";
@@ -27,7 +27,7 @@ const COUNT_10_000 = new TreeOptions(10, 5);
 //  tree: COUNT_10_000,
 //});
 
-await runCPUBenchmark(sut, pencilAppearsOnCollapsedRootAfterEdit, {
+await runCPUBenchmark(sut, pencilAppearsOnEditedNodeAfterEdit, {
   warmup: 5,
   runs: 20,
   silent: true,

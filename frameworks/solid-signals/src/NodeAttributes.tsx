@@ -2,8 +2,7 @@ import { Component, For, Show, useContext } from "solid-js";
 import { SelectedNodeContext } from "./SelectedNodeProvider";
 
 export const NodeAttributes: Component = () => {
-  const selectedNodeService = useContext(SelectedNodeContext);
-  const node = () => selectedNodeService.selected.get();
+  const { selected: node } = useContext(SelectedNodeContext);
   const attributes = () => node()?.attributes ?? [];
   return (
     <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -41,7 +40,7 @@ export const NodeAttributes: Component = () => {
                 {(attr) => (
                   <tr class="hover:bg-gray-50 transition-colors duration-150">
                     <td class="px-4 py-3 whitespace-nowrap">
-                      <Show when={attr.isEdited.get()}>
+                      <Show when={attr.isEdited()}>
                         <span>✏️</span>
                       </Show>
                     </td>
@@ -55,10 +54,8 @@ export const NodeAttributes: Component = () => {
                         <input
                           data-testid={attr.title}
                           type="text"
-                          value={attr.value}
-                          onInput={(event) => {
-                            attr.value = event.currentTarget.value;
-                          }}
+                          value={attr.value()}
+                          onInput={(e) => attr.update(e.currentTarget.value)}
                           class="w-full px-3 py-2 border border-gray-300 rounded-md
                                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                                         text-sm transition-colors duration-200"

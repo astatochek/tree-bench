@@ -3,8 +3,8 @@ import { TimelineHarness } from "../harness/timeline-harness.ts";
 import type { TreeOptions } from "../mocks.ts";
 import type { Test } from "../run.ts";
 
-export const pencilAppearsAfterEdit = {
-  name: "Pencil Appears After Edit",
+export const pencilAppearsOnEditedNodeAfterEdit = {
+  name: "Pencil Appears On Edited Node After Edit",
   run,
 } as const satisfies Test;
 

@@ -8,6 +8,7 @@ export interface TraceEvent {
   dur?: number;
   pid: number;
   tid: number;
+  end: number;
   args?: {
     data?: {
       type?: string;
@@ -121,6 +122,7 @@ export class TimelineHarness {
           ph: item.ph || "X",
           ts: item.ts || 0,
           dur: item.dur,
+          end: +item.ts + (item.dur ?? 0),
           pid: item.pid || 1,
           tid: item.tid || 1,
           args: item.args || {},
@@ -194,12 +196,12 @@ export class TimelineHarness {
       throw new Error("No commit event found");
     }
 
-    const durationMs = (relevantCommit.ts - triggerStartTime) / 1000;
+    const durationMs = (relevantCommit.end - triggerStartTime) / 1000;
 
     return {
       durationMillis: durationMs,
       clickStart: triggerStartTime,
-      commitEnd: relevantCommit.ts,
+      commitEnd: relevantCommit.end,
       eventsProcessed: postTriggerEvents.length,
     };
   }

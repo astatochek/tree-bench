@@ -1,32 +1,32 @@
-import { Accessor, createMemo, createSignal, Setter, Signal } from "solid-js";
-
-type UnwrappedSignal<T> = Readonly<{ get: Accessor<T>; set: Setter<T> }>;
-
-export function unwrapSignal<T>(signal: Signal<T>): UnwrappedSignal<T> {
-  const [get, set] = signal;
-  return { get, set };
-}
+import { Accessor, createMemo, createSignal, Setter } from "solid-js";
 
 export class TreeNode {
-  readonly isExpanded = unwrapSignal(createSignal(false));
+  readonly isExpanded: Accessor<boolean>;
   readonly isSelfEdited: Accessor<boolean>;
   readonly isEditedRecursive: Accessor<boolean>;
   readonly isEdited: Accessor<boolean>;
+
+  private readonly setIsExpanded: Setter<boolean>;
 
   constructor(
     readonly title: string,
     readonly children: TreeNode[],
     readonly attributes: TreeNodeAttr[],
   ) {
-    this.isSelfEdited = createMemo(() => this.attributes.some((attr) => attr.isEdited.get()));
-    this.isEditedRecursive = createMemo(() => this.isSelfEdited() || this.isSomeChildEdited());
+    const [isExpanded, setIsExpanded] = createSignal(false);
+    this.isExpanded = isExpanded;
+    this.setIsExpanded = setIsExpanded;
+    this.isSelfEdited = createMemo(() => this.attributes.some((attr) => attr.isEdited()));
+    this.isEditedRecursive = createMemo(() =>
+      this.children.some((c) => c.isSelfEdited() || c.isEditedRecursive()),
+    );
     this.isEdited = createMemo(() =>
-      this.isExpanded.get() ? this.isSelfEdited() : this.isEditedRecursive(),
+      this.isExpanded() ? this.isSelfEdited() : this.isSelfEdited() || this.isEditedRecursive(),
     );
   }
 
-  private isSomeChildEdited(): boolean {
-    return this.children.some((c) => c.isEditedRecursive());
+  toggle(): void {
+    this.setIsExpanded((prev) => !prev);
   }
 
   static fromRaw(node: RawTreeNode): TreeNode {
@@ -39,24 +39,27 @@ export class TreeNode {
 }
 
 export class TreeNodeAttr {
-  readonly isEdited = unwrapSignal(createSignal(false));
+  readonly isEdited: Accessor<boolean>;
+  private readonly setIsEdited: Setter<boolean>;
 
-  private readonly valueInternal: UnwrappedSignal<string>;
-
-  get value(): string {
-    return this.valueInternal.get();
-  }
-
-  set value(value: string) {
-    this.valueInternal.set(value);
-    this.isEdited.set(true);
-  }
+  readonly value: Accessor<string>;
+  private readonly setValue: Setter<string>;
 
   constructor(
     readonly title: string,
-    value: string,
+    initialValue: string,
   ) {
-    this.valueInternal = unwrapSignal(createSignal(value));
+    const [isEdited, setIsEdited] = createSignal(false);
+    this.isEdited = isEdited;
+    this.setIsEdited = setIsEdited;
+    const [value, setValue] = createSignal(initialValue);
+    this.value = value;
+    this.setValue = setValue;
+  }
+
+  update(value: string): void {
+    this.setValue(value);
+    this.setIsEdited(true);
   }
 
   static fromRaw(attr: RawTreeNodeAttr): TreeNodeAttr {

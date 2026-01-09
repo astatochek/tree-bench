@@ -1,18 +1,20 @@
-import { Component, createContext, createSignal, type JSX } from "solid-js";
-import { type TreeNode, type Nil, unwrapSignal } from "./model";
+import { Accessor, Component, createContext, createSignal, type JSX, Setter } from "solid-js";
+import { type TreeNode, type Nil } from "./model";
 
-class SelectedNodeService {
-  readonly selected = unwrapSignal(createSignal<TreeNode | Nil>(void 0));
-}
+type SelectedNodeService = {
+  selected: Accessor<TreeNode | Nil>;
+  select: Setter<TreeNode>;
+};
 
 export const SelectedNodeContext = createContext<SelectedNodeService>({
-  selected: { get: () => void 0, set: () => void 0 },
+  selected: () => void 0,
+  select: () => void 0,
 });
 
 export const SelectedNodeProvider: Component<{ children: JSX.Element }> = (props) => {
+  const [selected, select] = createSignal<TreeNode | Nil>(void 0);
+  const service = { selected, select } as SelectedNodeService;
   return (
-    <SelectedNodeContext.Provider value={new SelectedNodeService()}>
-      {props.children}
-    </SelectedNodeContext.Provider>
+    <SelectedNodeContext.Provider value={service}>{props.children}</SelectedNodeContext.Provider>
   );
 };
