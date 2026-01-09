@@ -3,7 +3,7 @@ import { runCPUBenchmark, runMemoryBenchmark } from "./run.ts";
 import { sut } from "./sut.ts";
 import { traverseTree } from "./mem-cases/traverse-tree.ts";
 import { TreeOptions } from "./mocks.ts";
-import { pencilAppearsOnCollapsedRootAfterEdit } from './cpu-cases/pencil-appears-on-collapsed-root-after-edit.ts'
+import { pencilAppearsOnCollapsedRootAfterEdit } from "./cpu-cases/pencil-appears-on-collapsed-root-after-edit.ts";
 
 /**
  * (width=4, depth=10, nodes=349525)
@@ -28,10 +28,10 @@ const COUNT_10_000 = new TreeOptions(10, 5);
 //});
 
 await runCPUBenchmark(sut, pencilAppearsOnCollapsedRootAfterEdit, {
-    warmup: 5,
-    runs: 20,
-    silent: true,
-    tree: COUNT_300_000,
+  warmup: 5,
+  runs: 20,
+  silent: true,
+  tree: COUNT_300_000,
 });
 
 //await runMemoryBenchmark(sut, traverseTree, { tree: COUNT_300_000 });

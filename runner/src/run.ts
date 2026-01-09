@@ -14,7 +14,7 @@ export type CPUBenchmarkRunConfig = {
   warmup?: number;
   runs?: number;
   tree: TreeOptions;
-  silent?: boolean
+  silent?: boolean;
 };
 
 export async function runCPUBenchmark(
@@ -30,16 +30,24 @@ export async function runCPUBenchmark(
     const page = await browser.newPage();
     await setupMocks(page, tree);
 
-    await tryRun(async () => {
-      await page.goto(`http://${process.env.HOST}:${ctx.port}`);
-      await test.run(page, tree);
-    }, warmup, silent);
+    await tryRun(
+      async () => {
+        await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+        await test.run(page, tree);
+      },
+      warmup,
+      silent,
+    );
 
-    await tryRun(async () => {
-      await page.goto(`http://${process.env.HOST}:${ctx.port}`);
-      const res = await test.run(page, tree);
-      ctx.results.push(res);
-    }, runs, silent);
+    await tryRun(
+      async () => {
+        await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+        const res = await test.run(page, tree);
+        ctx.results.push(res);
+      },
+      runs,
+      silent,
+    );
 
     await page.close();
   }
@@ -70,11 +78,15 @@ export async function runMemoryBenchmark(
   for await (const ctx of sut) {
     const page = await browser.newPage();
     await setupMocks(page, tree);
-    await tryRun(async () => {
-      await page.goto(`http://${process.env.HOST}:${ctx.port}`);
-      const res = await test.run(page, tree);
-      ctx.results.push(res);
-    }, 1, true);
+    await tryRun(
+      async () => {
+        await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+        const res = await test.run(page, tree);
+        ctx.results.push(res);
+      },
+      1,
+      true,
+    );
     await page.close();
   }
 
@@ -95,10 +107,10 @@ async function tryRun(fn: () => Promise<unknown>, times: number, silent: boolean
       await fn();
       count++;
     } catch (error: unknown) {
-        if (!silent) {
-            console.error(`Failed run #${count};`);
-            console.error(error);
-        }
+      if (!silent) {
+        console.error(`Failed run #${count};`);
+        console.error(error);
+      }
     }
   }
 }

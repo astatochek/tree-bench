@@ -15,7 +15,7 @@ export class TreeOptions {
   }
 
   getInfoLine() {
-      return `(width=${this.width}, depth=${this.depth}, nodes=${this.getNodeCount()})`
+    return `(width=${this.width}, depth=${this.depth}, nodes=${this.getNodeCount()})`;
   }
 }
 
