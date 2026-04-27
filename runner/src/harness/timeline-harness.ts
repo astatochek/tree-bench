@@ -25,11 +25,14 @@ export interface TimelineResult {
 }
 
 export class TimelineHarness {
+  private readonly page: Page;
   private cdpSession: CDPSession | null = null;
   private traceDataBuffer: any[] = [];
   private isTracing = false;
 
-  constructor(private page: Page) {}
+  constructor(page: Page) {
+    this.page = page;
+  }
 
   /**
    * Start Chrome DevTools Protocol tracing for performance events

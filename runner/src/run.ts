@@ -32,7 +32,7 @@ export async function runCPUBenchmark(
 
     await tryRun(
       async () => {
-        await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+        await page.goto(`http://localhost:${ctx.port}`);
         await test.run(page, tree);
       },
       warmup,
@@ -41,7 +41,7 @@ export async function runCPUBenchmark(
 
     await tryRun(
       async () => {
-        await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+        await page.goto(`http://localhost:${ctx.port}`);
         const res = await test.run(page, tree);
         ctx.results.push(res);
       },
@@ -80,7 +80,7 @@ export async function runMemoryBenchmark(
     await setupMocks(page, tree);
     await tryRun(
       async () => {
-        await page.goto(`http://${process.env.HOST}:${ctx.port}`);
+        await page.goto(`http://localhost:${ctx.port}`);
         const res = await test.run(page, tree);
         ctx.results.push(res);
       },

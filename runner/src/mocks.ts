@@ -1,10 +1,12 @@
 import type { Page, Route, Request } from "playwright";
 
 export class TreeOptions {
-  constructor(
-    readonly width: number,
-    readonly depth: number,
-  ) {}
+  readonly width: number;
+  readonly depth: number;
+  constructor(width: number, depth: number) {
+    this.width = width;
+    this.depth = depth;
+  }
 
   getNodeCount(): number {
     if (this.width === 1) {

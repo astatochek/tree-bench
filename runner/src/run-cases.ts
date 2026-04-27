@@ -28,10 +28,10 @@ const COUNT_10_000 = new TreeOptions(10, 5);
 //});
 
 await runCPUBenchmark(sut, pencilAppearsOnCollapsedRootAfterEdit, {
-  warmup: 5,
-  runs: 20,
+  warmup: 0,
+  runs: 1,
   silent: false,
-  tree: COUNT_100_000,
+  tree: COUNT_10_000,
 });
 
-//await runMemoryBenchmark(sut, traverseTree, { tree: COUNT_300_000 });
+//await runMemoryBenchmark(sut, traverseTree, { tree: COUNT_10_000 });

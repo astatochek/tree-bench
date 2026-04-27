@@ -1,7 +1,10 @@
 import type { Page } from "playwright";
 
 export class MemoryHarness {
-  constructor(private page: Page) {}
+  private readonly page: Page;
+  constructor(page: Page) {
+    this.page = page;
+  }
 
   async forceGC() {
     await this.page.evaluate("window.gc({type:'major',execution:'sync',flavor:'last-resort'})");
