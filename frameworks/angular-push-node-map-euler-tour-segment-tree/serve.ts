@@ -27,4 +27,6 @@ const server = Bun.serve({
   },
 });
 
-console.log(`Running Bun server on ${server.url} for Angular Push Nodes Map App`);
+console.log(
+  `Running Bun server on ${server.url} for Angular Push Nodes Map Euler Tour Segment Tree App`,
+);

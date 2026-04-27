@@ -17,4 +17,11 @@ export const sut: Context[] = [
   //{ title: "Vue Signals", dir: "vue-signals", port: 3008, results: [] },
   //{ title: "Svelte Signals", dir: "svelte-signals", port: 3009, results: [] },
   { title: "Angular Push Node Map", dir: "angular-push-node-map", port: 3010, results: [] },
+  { title: "React Push Node Map", dir: "react-push-nodes-map", port: 3011, results: [] },
+  {
+    title: "Angular Push Node Map Euler Tour Segment Tree",
+    dir: "angular-push-node-map-euler-tour-segment-tree",
+    port: 3012,
+    results: [],
+  },
 ];

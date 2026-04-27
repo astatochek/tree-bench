@@ -1,0 +1,97 @@
+import { useState, useCallback, useMemo } from "react";
+import {
+  getNodeByPath,
+  type Nil,
+  type NodePath,
+  type TreeNode,
+  updateNodeAtPath,
+} from "@/model.ts";
+
+export interface TreeContextType {
+  root: TreeNode;
+  updateAttribute: (path: NodePath, attributeTitle: string, value: string) => void;
+  toggleNodeExpansion: (path: NodePath) => void;
+  getNode: (path: NodePath) => TreeNode | Nil;
+  useIsSelected: (path: NodePath) => boolean;
+  selectPath: (path: NodePath) => void;
+  selectedNode: TreeNode | Nil;
+  selectedPath: NodePath | Nil;
+}
+
+export function useTreeStore(initialRoot: TreeNode): TreeContextType {
+  const [root, setRoot] = useState<TreeNode>(initialRoot);
+  const [selectedPath, selectPath] = useState<NodePath | Nil>(void 0);
+
+  // Get node by path
+  const getNode = useCallback(
+    (path: NodePath): TreeNode | Nil => {
+      return getNodeByPath(root, path);
+    },
+    [root],
+  );
+
+  const selectedNode = useMemo(() => {
+    if (!selectedPath) {
+      return;
+    }
+    return getNodeByPath(root, selectedPath);
+  }, [root, selectedPath]);
+
+  // Update attribute value
+  const updateAttribute = useCallback((path: NodePath, attributeTitle: string, value: string) => {
+    setRoot((prevRoot) =>
+      updateNodeAtPath(
+        prevRoot,
+        path,
+        (node) => ({
+          ...node,
+          attributes: node.attributes.map((attr) =>
+            attr.title === attributeTitle ? { ...attr, value, isEdited: true } : attr,
+          ),
+          isOwnEdited: true,
+        }),
+        true,
+      ),
+    );
+  }, []);
+
+  // Toggle node expansion
+  const toggleNodeExpansion = useCallback((path: NodePath) => {
+    setRoot((prevRoot) =>
+      updateNodeAtPath(
+        prevRoot,
+        path,
+        (node) => ({
+          ...node,
+          isExpanded: !node.isExpanded,
+        }),
+        false,
+      ),
+    );
+  }, []);
+
+  const useIsSelected = (path: NodePath) => {
+    return useMemo(() => {
+      if (!selectedPath || path.length !== selectedPath.length) {
+        return false;
+      }
+      for (let i = 0; i < path.length; i++) {
+        if (path[i] !== selectedPath[i]) {
+          return false;
+        }
+      }
+      return true;
+    }, [path, selectedPath]);
+  };
+
+  return {
+    root,
+    getNode,
+    updateAttribute,
+    toggleNodeExpansion,
+    selectPath,
+    useIsSelected,
+    selectedNode,
+    selectedPath,
+  };
+}
