@@ -26,6 +26,9 @@ import { TreeStore } from "../services/tree-store.service";
               <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Value
               </th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Clear
+              </th> 
             </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -40,9 +43,9 @@ import { TreeStore } from "../services/tree-store.service";
 
                     <!-- Title Column -->
                     <td class="px-4 py-3">
-                <span class="text-sm font-medium text-gray-900">
-                  {{ attr.title }}
-                </span>
+                      <span class="text-sm font-medium text-gray-900">
+                        {{ attr.title }}
+                      </span>
                     </td>
 
                     <td class="px-4 py-3">
@@ -58,6 +61,13 @@ import { TreeStore } from "../services/tree-store.service";
                         />
                       </div>
                     </td>
+                    <!-- Clear Column -->
+                    <td class="px-4 py-3 whitespace-nowrap">
+                      @if (attr.isEdited) {
+                        <button [attr.data-testid]="'clear:' + attr.title"
+                                (click)="tree.clear(attr.parentId, attr.id)">↩️</button>
+                      }
+                    </td> 
                   </tr>
               }
             </tbody>

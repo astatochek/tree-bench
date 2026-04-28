@@ -35,7 +35,7 @@ async function run(page: Page, tree: TreeOptions) {
 
   const harness = new TimelineHarness(page);
 
-  const res = await harness.measureInputToPaint(async () => {
+  const res = await harness.measureInputToPaint("input", async () => {
     await input.fill("11");
     await pencil.waitFor({ state: "visible" });
   });

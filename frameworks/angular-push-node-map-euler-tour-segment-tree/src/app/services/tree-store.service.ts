@@ -28,4 +28,8 @@ export class TreeStore {
   toggle(nodeId: string): void {
     this.tree.update((t) => t.toggle(nodeId));
   }
+
+  clear(nodeId: string, attrId: string): void {
+    this.tree.update((t) => t.clear(nodeId, attrId));
+  }
 }

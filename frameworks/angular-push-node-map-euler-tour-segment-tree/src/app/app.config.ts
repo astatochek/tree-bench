@@ -13,6 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       const res = await fetch(`${window.location.origin}/api/tree`);
       tree.json = await res.json();
+      //tree.json = genTree(10, 5, 0, 0);
     }),
   ],
 };

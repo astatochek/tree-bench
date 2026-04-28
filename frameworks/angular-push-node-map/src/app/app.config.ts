@@ -10,12 +10,25 @@ export const tree: { json: RawTreeNode | Nil } = { json: null };
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideAppInitializer(() =>
-      fetch(`${window.location.origin}/api/tree`)
-        .then((res) => res.json())
-        .then((json) => {
-          tree.json = json;
-        }),
-    ),
+    provideAppInitializer(async () => {
+      const res = await fetch(`${window.location.origin}/api/tree`);
+      tree.json = await res.json();
+      //tree.json = genTree(10, 5, 0, 0);
+    }),
   ],
 };
+
+//function genTree(width: number, depth: number, level: number, index: number): any {
+//  const children =
+//    level === depth - 1
+//      ? []
+//      : Array.from(Array(width).keys()).map((index) => genTree(width, depth, level + 1, index));
+//  return {
+//    title: `Node ${level}-${index}`,
+//    attributes: Array.from(Array(3).keys()).map((attrIdx) => ({
+//      title: `attr ${level}-${index} #${attrIdx + 1}`,
+//      value: "10",
+//    })),
+//    children,
+//  };
+//}

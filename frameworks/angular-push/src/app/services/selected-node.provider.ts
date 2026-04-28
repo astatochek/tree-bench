@@ -9,11 +9,14 @@ export class SelectedNodeProvider {
   private readonly tree = inject(EditTreeService).tree;
   readonly selectedPath = signal<number[] | Nil>(void 0);
 
-  readonly selectedNode = computed(() => {
-    const path = this.selectedPath();
-    if (!path) return;
-    return findNodeByPath(this.tree(), path);
-  });
+  readonly selectedNode = computed(
+    () => {
+      const path = this.selectedPath();
+      if (!path) return;
+      return findNodeByPath(this.tree(), path);
+    },
+    { equal: () => false },
+  );
 
   isNodeSelected(path: number[]): boolean {
     const selected = this.selectedPath();

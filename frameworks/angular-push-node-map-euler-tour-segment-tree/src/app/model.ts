@@ -150,6 +150,22 @@ export class Tree {
     return this;
   }
 
+  clear(nodeId: string, attrId: string): Tree {
+    const node = this.all.get(nodeId);
+    if (!node) return this;
+    const attr = node.attributes.find((attr) => attr.id === attrId);
+    if (!attr) return this;
+
+    attr.isEdited = false;
+    const wasEdited = node.isSelfEdited;
+    node.isSelfEdited = node.attributes.some((attr) => attr.isEdited);
+    if (wasEdited !== node.isSelfEdited) {
+      this.segmentTree.update(node.entry, false);
+    }
+
+    return this;
+  }
+
   toggle(nodeId: string): Tree {
     const node = this.all.get(nodeId);
     if (!node) return this;

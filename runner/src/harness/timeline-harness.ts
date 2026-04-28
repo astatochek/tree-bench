@@ -29,6 +29,7 @@ export class TimelineHarness {
   private cdpSession: CDPSession | null = null;
   private traceDataBuffer: any[] = [];
   private isTracing = false;
+  private interactionType!: "click" | "input";
 
   constructor(page: Page) {
     this.page = page;
@@ -121,7 +122,11 @@ export class TimelineHarness {
   /**
    * Main measurement method using CDP tracing
    */
-  async measureInputToPaint(interaction: () => Promise<void>): Promise<TimelineResult> {
+  async measureInputToPaint(
+    interactionType: "click" | "input",
+    interaction: () => Promise<void>,
+  ): Promise<TimelineResult> {
+    this.interactionType = interactionType;
     // Start CDP tracing for performance events
     await this.startCDPTracing();
 
@@ -220,7 +225,7 @@ export class TimelineHarness {
    */
   private findInputEvents(events: TraceEvent[]): TraceEvent[] {
     return events.filter((e) => {
-      const isInputEvent = e.args?.data?.type === "input";
+      const isInputEvent = e.args?.data?.type === this.interactionType;
 
       // Only include B (begin) or X (complete) events
       return isInputEvent && (e.ph === "B" || e.ph === "X");

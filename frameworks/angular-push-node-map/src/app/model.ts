@@ -132,6 +132,39 @@ export class Tree {
     return this;
   }
 
+  clear(nodeId: string, attrId: string): Tree {
+    const node = this.all.get(nodeId);
+    if (!node) return this;
+    const attr = node.attributes.find((attr) => attr.id === attrId);
+    if (!attr) return this;
+
+    attr.isEdited = false;
+
+    const wasSelfEdited = node.isSelfEdited;
+    node.isSelfEdited = node.attributes.some((a) => a.isEdited);
+
+    if (wasSelfEdited === node.isSelfEdited) {
+      return this;
+    }
+
+    let current: TreeNode | Nil = node;
+    while (current) {
+      const wasSubtreeEdited = current.isSubtreeEdited;
+      current.isSubtreeEdited =
+        current.isSelfEdited ||
+        current.childrenIds.some((id) => {
+          const child = this.all.get(id);
+          if (!child) return false;
+          return child.isSelfEdited || child.isSubtreeEdited;
+        });
+
+      if (wasSubtreeEdited === current.isSubtreeEdited) break;
+
+      current = current.parentId ? this.all.get(current.parentId) : void 0;
+    }
+    return this;
+  }
+
   toggle(nodeId: string): Tree {
     const node = this.all.get(nodeId);
     if (!node) return this;

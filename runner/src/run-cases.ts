@@ -2,8 +2,9 @@ import { pencilAppearsOnEditedNodeAfterEdit } from "./cpu-cases/pencil-appears-o
 import { runCPUBenchmark, runMemoryBenchmark } from "./run.ts";
 import { sut } from "./sut.ts";
 import { traverseTree } from "./mem-cases/traverse-tree.ts";
-import { TreeOptions } from "./mocks.ts";
+import { ExponentialTreeOptions, MultiplicativeTreeOptions } from "./mocks.ts";
 import { pencilAppearsOnCollapsedRootAfterEdit } from "./cpu-cases/pencil-appears-on-collapsed-root-after-edit.ts";
+import { pencilDisappearsFromCollapsedRootOnClear } from "./cpu-cases/pencil-disappears-from-collapsed-root-on-clear.ts";
 
 /**
  * (width=4, depth=10, nodes=349525)
@@ -13,13 +14,19 @@ import { pencilAppearsOnCollapsedRootAfterEdit } from "./cpu-cases/pencil-appear
  * (width=9, depth=6, nodes=66430)
  * (width=8, depth=6, nodes=37449)
  */
+const Exponential = {
+  COUNT_350_000: new ExponentialTreeOptions(4, 10),
+  COUNT_300_000: new ExponentialTreeOptions(8, 7),
+  COUNT_100_000: new ExponentialTreeOptions(10, 6),
+  COUNT_60_000: new ExponentialTreeOptions(9, 6),
+  COUNT_40_000: new ExponentialTreeOptions(9, 6),
+  COUNT_10_000: new ExponentialTreeOptions(10, 5),
+} as const;
 
-const COUNT_350_000 = new TreeOptions(4, 10);
-const COUNT_300_000 = new TreeOptions(8, 7);
-const COUNT_100_000 = new TreeOptions(10, 6);
-const COUNT_60_000 = new TreeOptions(9, 6);
-const COUNT_40_000 = new TreeOptions(9, 6);
-const COUNT_10_000 = new TreeOptions(10, 5);
+const Multiplicative = {
+  COUNT_50_000: new MultiplicativeTreeOptions(10_000, 5),
+  COUNT_200_000: new MultiplicativeTreeOptions(10_000, 20),
+} as const;
 
 //await runCPUBenchmark(sut, pencilAppearsAfterEdit, {
 //  warmup: 5,
@@ -27,11 +34,11 @@ const COUNT_10_000 = new TreeOptions(10, 5);
 //  tree: COUNT_10_000,
 //});
 
-await runCPUBenchmark(sut, pencilAppearsOnEditedNodeAfterEdit, {
-  warmup: 5,
-  runs: 20,
-  silent: false,
-  tree: COUNT_350_000,
-});
+//await runCPUBenchmark(sut, pencilDisappearsFromCollapsedRootOnClear, {
+//  warmup: 0,
+//  runs: 5,
+//  silent: false,
+//  tree: new MultiplicativeTreeOptions(1_000, 5),
+//});
 
-//await runMemoryBenchmark(sut, traverseTree, { tree: COUNT_10_000 });
+await runMemoryBenchmark(sut, traverseTree, { tree: new MultiplicativeTreeOptions(10_000, 5) });
