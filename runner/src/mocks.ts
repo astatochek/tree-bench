@@ -3,6 +3,7 @@ import type { Page, Route, Request } from "playwright";
 export type TreeOptions = {
   readonly width: number;
   readonly depth: number;
+  readonly attributes: number;
 
   getInfoLine(): string;
   genTree(): TreeNodeJSON;
@@ -11,9 +12,11 @@ export type TreeOptions = {
 export class ExponentialTreeOptions implements TreeOptions {
   readonly width: number;
   readonly depth: number;
-  constructor(width: number, depth: number) {
+  readonly attributes: number;
+  constructor(width: number, depth: number, attributes: number) {
     this.width = width;
     this.depth = depth;
+    this.attributes = attributes;
   }
 
   getNodeCount(): number {
@@ -25,7 +28,7 @@ export class ExponentialTreeOptions implements TreeOptions {
   }
 
   getInfoLine() {
-    return `(width=${this.width}, depth=${this.depth}, nodes=${this.getNodeCount()})`;
+    return `(width=${this.width}, depth=${this.depth}, nodes=${this.getNodeCount()}, attrs=${this.getNodeCount() * this.attributes})`;
   }
 
   genTree(): TreeNodeJSON {
@@ -36,7 +39,7 @@ export class ExponentialTreeOptions implements TreeOptions {
           : Array.from(Array(this.width).keys()).map((index) => rec(level + 1, index));
       return {
         title: `Node ${level}-${index}`,
-        attributes: Array.from(Array(3).keys()).map((attrIdx) => ({
+        attributes: Array.from(Array(this.attributes).keys()).map((attrIdx) => ({
           title: `attr ${level}-${index} #${attrIdx + 1}`,
           value: "10",
         })),
@@ -50,9 +53,11 @@ export class ExponentialTreeOptions implements TreeOptions {
 export class MultiplicativeTreeOptions implements TreeOptions {
   readonly width: number;
   readonly depth: number;
-  constructor(width: number, depth: number) {
+  readonly attributes: number;
+  constructor(width: number, depth: number, attributes: number) {
     this.width = width;
     this.depth = depth;
+    this.attributes = attributes;
   }
 
   getNodeCount(): number {
@@ -60,7 +65,7 @@ export class MultiplicativeTreeOptions implements TreeOptions {
   }
 
   getInfoLine() {
-    return `(width=${this.width}, depth=${this.depth}, nodes=${this.getNodeCount()})`;
+    return `(width=${this.width}, depth=${this.depth}, nodes=${this.getNodeCount()}, attrs=${this.getNodeCount() * this.attributes})`;
   }
 
   genTree(): TreeNodeJSON {
@@ -80,7 +85,7 @@ export class MultiplicativeTreeOptions implements TreeOptions {
 
       return {
         title: `Node ${level}-${index}`,
-        attributes: Array.from({ length: 3 }).map((_, attrIdx) => ({
+        attributes: Array.from({ length: this.attributes }).map((_, attrIdx) => ({
           title: `attr ${level}-${index} #${attrIdx + 1}`,
           value: "10",
         })),

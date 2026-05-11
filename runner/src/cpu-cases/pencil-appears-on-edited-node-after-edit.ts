@@ -26,7 +26,8 @@ async function run(page: Page, tree: TreeOptions) {
   const node = page.getByTitle(`Node ${last.level}-${last.pos}`);
   await node.click();
 
-  const input = page.getByTestId(`attr ${last.level}-${last.pos} #3`);
+  const input = page.getByTestId(`attr ${last.level}-${last.pos} #${tree.attributes - 1}`);
+  await input.scrollIntoViewIfNeeded();
   await input.waitFor({ state: "visible" });
 
   const pencil = page.getByTestId(`pencil:Node ${last.level}-${last.pos}`);

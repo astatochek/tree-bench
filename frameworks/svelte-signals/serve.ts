@@ -16,5 +16,9 @@ if (!values.port || isNaN(Number(values.port))) {
   throw new Error(`Unexpected value for "port": ${values.port}`);
 }
 
-await $`bun run build`;
-await $`bun run preview --port ${values.port}`;
+//process.env.PORT = values.port;
+//
+//await $`node node_modules/vite/bin/vite.js build`;
+//await $`node node_modules/vite/bin/vite.js preview`;
+
+console.warn(`Svelte WILL NOT RUN ON ${values.port}!. Serve MANUALLY`);

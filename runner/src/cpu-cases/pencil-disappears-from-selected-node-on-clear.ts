@@ -3,8 +3,8 @@ import { TimelineHarness } from "../harness/timeline-harness.ts";
 import type { TreeOptions } from "../mocks.ts";
 import type { Test } from "../run.ts";
 
-export const pencilAppearsOnCollapsedRootAfterEdit = {
-  name: "Pencil Appears On Collapsed Root After Edit",
+export const pencilDisappearsFromSelectedNodeOnClear = {
+  name: "Pencil Disappears From Selected Node On Clear",
   run,
 } as const satisfies Test;
 
@@ -26,19 +26,22 @@ async function run(page: Page, tree: TreeOptions) {
   const node = page.getByTitle(`Node ${last.level}-${last.pos}`);
   await node.click();
 
-  const input = page.getByTestId(`attr ${last.level}-${last.pos} #${tree.attributes - 1}`);
-  await input.scrollIntoViewIfNeeded();
+  const input = page.getByTestId(`attr ${last.level}-${last.pos} #3`);
   await input.waitFor({ state: "visible" });
 
-  await page.getByTestId(`expand:Node 0-0`).click();
+  const pencil = page.getByTestId(`pencil:Node ${last.level}-${last.pos}`);
 
-  const pencil = page.getByTestId(`pencil:Node 0-0`);
+  await input.fill("11");
+  await pencil.waitFor({ state: "visible" });
+
+  const clear = page.getByTestId(`clear:attr ${last.level}-${last.pos} #3`);
+  await clear.waitFor({ state: "visible" });
 
   const harness = new TimelineHarness(page);
 
-  const res = await harness.measureInputToPaint("input", async () => {
-    await input.fill("11");
-    await pencil.waitFor({ state: "visible" });
+  const res = await harness.measureInputToPaint("click", async () => {
+    await clear.click();
+    await pencil.waitFor({ state: "hidden" });
   });
 
   return res.durationMillis;

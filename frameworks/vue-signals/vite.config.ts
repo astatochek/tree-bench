@@ -30,7 +30,6 @@ export default defineConfig({
         bypass: () => false,
       },
     },
-    host: process.env.HOST,
   },
 });
 
