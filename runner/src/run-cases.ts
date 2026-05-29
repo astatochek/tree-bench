@@ -35,11 +35,11 @@ const Multiplicative = {
 //  tree: COUNT_10_000,
 //});
 
-await runCPUBenchmark(sut, pencilAppearsOnEditedNodeAfterEdit, {
-  warmup: 2,
-  runs: 50,
-  silent: false,
-  tree: new ExponentialTreeOptions(10, 5, 128),
-});
+//await runCPUBenchmark(sut, pencilAppearsOnEditedNodeAfterEdit, {
+//  warmup: 2,
+//  runs: 50,
+//  silent: false,
+//  tree: new ExponentialTreeOptions(10, 5, 128),
+//});
 
-//await runMemoryBenchmark(sut, traverseTree, { tree: new MultiplicativeTreeOptions(10_000, 5) });
+await runMemoryBenchmark(sut, traverseTree, { tree: new ExponentialTreeOptions(4, 10, 3) });
